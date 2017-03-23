@@ -37,7 +37,7 @@ io.on('connection', function(socket){
     var heurescomplete  = heure + ":" + minute + ":" + seconde;
     connection.query("INSERT INTO message VALUES (NULL,'" + msg +" ', '" + heurescomplete +"')", function(err, rows, fields) {
       if (err) throw err;
-      console.log('Message ajouté' + date);
+      console.log('Message ajouté à ' + heurescomplete);
     });
     console.log('Message envoye : ' + msg);
   });
