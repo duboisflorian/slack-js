@@ -6,8 +6,10 @@ app.directive('chatContenu',function(){
     },
     templateUrl:'acc.chat/acc.chat.html',
     controller:function($scope){
+
       var socket = io();
       $scope.messages = [];
+
       $scope.getHeureNow = function(){
         var date = new Date();
         var heure = date.getHours();
@@ -17,32 +19,17 @@ app.directive('chatContenu',function(){
         var heurescomplete  = heure + ":" + minute;
         return heurescomplete;
       }
+
       $scope.envoyerMessage = function(){
         var heurescomplete = $scope.getHeureNow();
-        socket.emit('chat_message', $scope.message, heurescomplete);
-        $scope.messages.push({contenu: $scope.message, heure: heurescomplete});
+        socket.emit('chat' + $scope.channel, $scope.message, heurescomplete, $scope.channel);
         $scope.message = '';
       }
 
-      socket.on('chat_message', function(msg){
+      socket.on('chat' + $scope.channel, function(msg, heures, id){
+        $scope.messages.push({contenu: msg, heure: heures});
         console.log("tableau de messages", $scope.messages);
       });
-      // $(function () {
-      //   var socket = io();
-      //   $('form').submit(function(){
-      //     socket.emit('chat message', $('#m').val());
-      //     $('#m').val('');
-      //     return false;
-      //   });
-      //   socket.on('chat message', function(msg){
-      //     var date = new Date();
-      //     var heure = date.getHours();
-      //     var minute = date.getMinutes();
-      //     var message  = "[" + heure + ":" + minute + "] : " + msg;
-      //     $('#messages').append($('<li>').text(message));
-      //     window.scrollTo(0, document.body.scrollHeight);
-      //   });
-      // });
     }
   }
 
