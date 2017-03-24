@@ -1,7 +1,9 @@
 app.directive('chatContenu',function(){
   return{
     restrict:'E',
-    scope: true,
+    scope:{
+      channel:'=chan',
+    },
     templateUrl:'acc.chat/acc.chat.html',
     controller:function($scope){
       var socket = io();

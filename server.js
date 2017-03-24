@@ -30,6 +30,22 @@ res.sendFile(__dirname + '/public/index.html');
 });
 
 io.on('connection', function(socket){
+  // Récupération des channels
+  connection.query('SELECT * from Channel ' ,function(err, rows, fields){
+    if (err) throw err;
+    var channels = rows;
+  });
+  // boucle pour émission de message en fonction du channel
+  for(var i; i < channels.length; i++){
+    socket.on('chat'+ channels[i].id, function(msg, heures){
+      io.emit('chat'+ channels[i].id, msg, heures);
+      connection.query("INSERT INTO message VALUES (NULL,'" + msg +" ', '" + heures +"')", function(err, rows, fields) {
+        if (err) throw err;
+        console.log('Message ajouté à ' + heures);
+      });
+      console.log('Message envoye : ' + msg);
+    });
+  }
   socket.on('chat_message', function(msg, heures){
     io.emit('chat_message', msg, heures);
     connection.query("INSERT INTO message VALUES (NULL,'" + msg +" ', '" + heures +"')", function(err, rows, fields) {
