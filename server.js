@@ -53,6 +53,7 @@ connection.query('SELECT * from Channel ' ,function(err, rows, fields) {
     })
 });
 
+
 app.get('/channels',function(req,res){
 
   connection.query('SELECT * from Channel ' ,function(err, rows, fields) {
@@ -63,7 +64,7 @@ app.get('/channels',function(req,res){
 
 })
 
-app.delete('/userdelete/:nale',function(req,res){
+app.delete('/userdelete/:name',function(req,res){
 
   connection.query('delete from user where pseudo =' + req.params.name ,function(err, rows, fields) {
       if (err) throw err;
@@ -100,6 +101,30 @@ connection.query("INSERT INTO user VALUES (NULL,'" + req.params.name +  "')",fun
 
       res.send("user created");
 });
+
+})
+
+app.post('/addchannel/:name',function(req,res){
+
+connection.query("INSERT INTO Channel VALUES (NULL,'" + req.params.name +  "')",function(err, rows, fields) {
+      if (err) throw err;
+});
+      connection.query('SELECT * FROM Channel ORDER BY id DESC LIMIT 1' ,function(err, rows, fields){
+           if (err) throw err;
+
+          var chan = rows[0].id;
+           io.on('connection', function(socket){
+             socket.on('chat' + chan, function(msg, heures, id,name){
+               io.emit('chat' + id, msg, heures, id,name);
+               connection.query("INSERT INTO message VALUES (NULL,'" + msg +" ', '" + heures + " ', '" + id + " ', '" + name  + "')", function(err, rows, fields) {
+                 if (err) throw err;
+                 console.log('Message ajouté à ' + heures);
+               });
+               console.log('Message envoye : ' + msg);
+             });
+           });
+      });
+      res.send("channel created");
 
 })
 

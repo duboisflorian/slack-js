@@ -35,6 +35,18 @@ app.directive('channelList',function(channelFactory,$q){
         $scope.$parent.changerChannel(id);
       };
 
+      $scope.add = function add(){
+        channelFactory.addChannel($scope.newchan);
+        var promise = asyncGreet();
+        promise.then(function(greeting) {
+          $scope.channels = greeting;
+        }, function(reason) {
+          alert('Failed: ' + reason);
+        });
+        $scope.newchan="";
+      };
+
+
     }
   }
 });

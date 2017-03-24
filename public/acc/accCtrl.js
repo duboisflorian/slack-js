@@ -2,12 +2,6 @@ app.controller('slackCtrl', function($scope,channelFactory,userFactory,messagesF
   $scope.channel=1;
   $scope.user="";
 
-  var myInterval = setInterval(alert('tg'));
-  $scope.$on("$destroy", function(){
-      if($scope.user=="")
-      clearInterval(myInterval);
-      //      userFactory.deleteUser($scope.user);
-  });
 
   function asyncGreet() {
     // perform some asynchronous operation, resolve or reject the promise when appropriate.
