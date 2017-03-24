@@ -1,4 +1,4 @@
-app.directive('navBar',function(channelFactory,$q){
+app.directive('navBar',function(channelFactory,userFactory,$q){
   return{
     restrict:'E',
     scope: true,
@@ -8,6 +8,7 @@ app.directive('navBar',function(channelFactory,$q){
     $('.bs-example-modal-lg').modal('show');
 
     $scope.closeModal = function closeModal(){
+      $scope.$parent.newUser($scope.name);
       $('.bs-example-modal-lg').modal('hide');
     };
 

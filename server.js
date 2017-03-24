@@ -29,6 +29,11 @@ app.get('/', function(req, res){
 res.sendFile(__dirname + '/public/index.html');
 });
 
+io.on('connection', function(socket){
+  socket.on('name' , function(name){
+    io.emit('name' , name);
+    });
+  });
 
 connection.query('SELECT * from Channel ' ,function(err, rows, fields) {
     if (err) throw err;
@@ -36,9 +41,9 @@ connection.query('SELECT * from Channel ' ,function(err, rows, fields) {
     // boucle pour émission de message en fonction du channel
     rows.forEach(function(channel){
       io.on('connection', function(socket){
-        socket.on('chat' + channel.id, function(msg, heures, id){
-          io.emit('chat' + id, msg, heures, id);
-          connection.query("INSERT INTO message VALUES (NULL,'" + msg +" ', '" + heures +"')", function(err, rows, fields) {
+        socket.on('chat' + channel.id, function(msg, heures, id,name){
+          io.emit('chat' + id, msg, heures, id,name);
+          connection.query("INSERT INTO message VALUES (NULL,'" + msg +" ', '" + heures + " ', '" + id + " ', '" + name  + "')", function(err, rows, fields) {
             if (err) throw err;
             console.log('Message ajouté à ' + heures);
           });
@@ -54,6 +59,46 @@ app.get('/channels',function(req,res){
       if (err) throw err;
 
       res.json(rows);
+});
+
+})
+
+app.delete('/userdelete/:nale',function(req,res){
+
+  connection.query('delete from user where pseudo =' + req.params.name ,function(err, rows, fields) {
+      if (err) throw err;
+
+      res.send("user delete");
+});
+
+})
+
+app.get('/users',function(req,res){
+
+  connection.query('SELECT * from user ' ,function(err, rows, fields) {
+      if (err) throw err;
+
+      res.json(rows);
+});
+
+})
+
+app.get('/lastmessages/:id',function(req,res){
+
+connection.query('SELECT * FROM  message where idchannel = ' + req.params.id +' ORDER BY id DESC LIMIT 10 ' ,function(err, rows, fields) {
+      if (err) throw err;
+
+      res.json(rows);
+});
+
+})
+
+app.post('/newuser/:name',function(req,res){
+
+connection.query("INSERT INTO user VALUES (NULL,'" + req.params.name +  "')",function(err, rows, fields) {
+      if (err) throw err;
+
+      res.send("user created");
 });
 
 })

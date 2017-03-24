@@ -17,7 +17,7 @@
       </form> -->
       <ul>
         <li ng-repeat="m in messages track by $index" style="list-style-type:none;">
-          [{{m.heure}}] : {{m.contenu}}
+          {{m.name}} ( {{m.date}} ) : {{m.contenu}}
         </li>
       </ul>
       <form ng-submit="envoyerMessage()">

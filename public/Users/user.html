@@ -3,7 +3,7 @@
 </div>
 <ul class="nav nav-sidebar">
   <!-- <li><div class="circle"></div><a href="">Lipton</a></li> -->
-  <li><a href="">Lipton</a></li>
-  <li><a href="">Eldi</a></li>
-  <li><a href="">Ting ting Tac</a></li>
+  <li ng-repeat="u in users track by $index"><a href="">{{u.pseudo}}</a></li>
+
 </ul>
+<ul>
