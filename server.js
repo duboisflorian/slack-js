@@ -12,6 +12,8 @@ var connection = mysql.createConnection({
   database : 'slack-js_project'
 });
 
+  connection.connect();
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -28,20 +30,25 @@ res.sendFile(__dirname + '/public/index.html');
 });
 
 io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
-    var date = new Date();
-    var heure = date.getHours();
-    var minute = date.getMinutes();
-    var seconde = date.getSeconds();
-    var heurescomplete  = heure + ":" + minute + ":" + seconde;
-    connection.query("INSERT INTO message VALUES (NULL,'" + msg +" ', '" + heurescomplete +"')", function(err, rows, fields) {
+  socket.on('chat_message', function(msg, heures){
+    io.emit('chat_message', msg, heures);
+    connection.query("INSERT INTO message VALUES (NULL,'" + msg +" ', '" + heures +"')", function(err, rows, fields) {
       if (err) throw err;
-      console.log('Message ajouté à ' + heurescomplete);
+      console.log('Message ajouté à ' + heures);
     });
     console.log('Message envoye : ' + msg);
   });
 });
+
+app.get('/channels',function(req,res){
+
+  connection.query('SELECT * from Channel ' ,function(err, rows, fields) {
+      if (err) throw err;
+
+      res.json(rows);
+});
+
+})
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
