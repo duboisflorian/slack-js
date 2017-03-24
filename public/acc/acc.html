@@ -1,0 +1,33 @@
+<di ng-controller="slackCtrl">
+  <nav-bar></nav-bar>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+
+        <channel-list></channel-list>
+        <user-list></user-list>
+
+      </div>
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <!-- <ul id="messages"></ul>
+      <form action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+      </form> -->
+      <ul>
+        <li ng-repeat="m in messages track by $index" style="list-style-type:none;">
+          [{{m.heure}}] : {{m.contenu}}
+        </li>
+      </ul>
+      <form ng-submit="envoyerMessage()">
+        <!-- <input ng-model="m"/><button>Send</button> -->
+        <input type="text" ng-model="message"><button>Send</button>
+      </form>
+      </div>
+
+
+    </div>
+
+  </div>
+</di>
