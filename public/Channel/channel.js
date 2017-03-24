@@ -32,7 +32,7 @@ app.directive('channelList',function(channelFactory,$q){
 
       $scope.changerFocus = function changerFocus(id){
         $scope.active=id;
-        $scope.$parent.channel=id;
+        $scope.$parent.changerChannel(id);
       };
 
     }
